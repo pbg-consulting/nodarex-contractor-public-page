@@ -455,11 +455,11 @@ function openModal() {
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
   
-  document.getElementById('app-root').style.overflow = 'hidden';
-  const requestForm = document.querySelector(".request-form");
-if (requestForm) requestForm.style.display = "flex";
-const requestForm = document.querySelector(".request-form");
-if (requestForm) requestForm.style.display = "none";
+document.getElementById('app-root').style.overflow = isOpen ? 'hidden' : '';
+
+const requestForm = document.querySelector('.request-form');
+if (requestForm) {
+  requestForm.style.display = isOpen ? 'flex' : 'none';
 }
 
 function closeModal() {
