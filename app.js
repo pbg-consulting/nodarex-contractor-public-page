@@ -456,8 +456,10 @@ function openModal() {
   modal.setAttribute('aria-hidden', 'false');
   
   document.getElementById('app-root').style.overflow = 'hidden';
-  document.querySelector('.request-form')?.style.display = 'flex';
-  document.getElementById('form-success').style.display = 'none';
+  const requestForm = document.querySelector(".request-form");
+if (requestForm) requestForm.style.display = "flex";
+const requestForm = document.querySelector(".request-form");
+if (requestForm) requestForm.style.display = "none";
 }
 
 function closeModal() {
