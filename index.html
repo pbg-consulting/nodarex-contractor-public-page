@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no">
+  <meta name="description" content="Contractor profile and service request">
+  <meta name="theme-color" content="#0f0f0f">
+  <title>Contractor Profile</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app-root"></div>
+
+  <!-- Request Service Modal -->
+  <div id="request-modal" class="modal" aria-hidden="true" role="dialog" aria-labelledby="modal-title">
+    <div class="modal-overlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="modal-title">Request Service</h2>
+        <button class="modal-close" aria-label="Close request form">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      <form id="request-form" class="request-form">
+        <div class="form-group">
+          <label for="request-name">Full Name</label>
+          <input type="text" id="request-name" name="name" required placeholder="John Doe">
+        </div>
+        <div class="form-group">
+          <label for="request-phone">Phone</label>
+          <input type="tel" id="request-phone" name="phone" required placeholder="(555) 123-4567">
+        </div>
+        <div class="form-group">
+          <label for="request-email">Email</label>
+          <input type="email" id="request-email" name="email" required placeholder="you@example.com">
+        </div>
+        <div class="form-group">
+          <label for="request-address">Address</label>
+          <input type="text" id="request-address" name="address" placeholder="123 Main Street, City, State">
+        </div>
+        <div class="form-group">
+          <label for="request-description">Tell us about your project</label>
+          <textarea id="request-description" name="description" rows="4" placeholder="Describe what you need help with..."></textarea>
+        </div>
+        <div class="form-group">
+          <label for="request-contact">Preferred Contact Method</label>
+          <select id="request-contact" name="contact_method" required>
+            <option value="">Select a method</option>
+            <option value="phone">Phone</option>
+            <option value="email">Email</option>
+            <option value="either">Either is fine</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-large">Submit Request</button>
+      </form>
+      <div id="form-success" class="form-success" style="display: none;">
+        <div class="success-content">
+          <svg class="success-icon" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          <h3>Request Sent</h3>
+          <p>We have received your request. The contractor will be in touch soon.</p>
+          <button type="button" class="btn btn-secondary" onclick="closeModal()">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Image Gallery Modal -->
+  <div id="gallery-modal" class="modal gallery-modal" aria-hidden="true" role="dialog" aria-labelledby="gallery-modal-title">
+    <div class="modal-overlay"></div>
+    <div class="gallery-modal-content">
+      <button class="gallery-close" aria-label="Close gallery">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+      <div class="gallery-image-container">
+        <img id="gallery-image" src="" alt="Project image" class="gallery-image">
+      </div>
+      <div class="gallery-nav">
+        <button class="gallery-prev" aria-label="Previous image">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="15 18 9 12 15 6"></polyline>
+          </svg>
+        </button>
+        <span id="gallery-counter" class="gallery-counter"></span>
+        <button class="gallery-next" aria-label="Next image">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+            <polyline points="9 18 15 12 9 6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

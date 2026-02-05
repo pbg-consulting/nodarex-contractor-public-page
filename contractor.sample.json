@@ -1,0 +1,74 @@
+{
+  "slug": "john-smith-plumbing",
+  "name": "John Smith Plumbing",
+  "primary_category": "Plumbing",
+  "service_area": "Denver Metro Area, Colorado",
+  "description": "Professional plumbing services for residential and commercial properties. We specialize in repairs, installations, and maintenance with 24/7 emergency support. Our team is dedicated to delivering quality workmanship and exceptional customer service.",
+  "about": "John Smith Plumbing has been serving the Denver metro area since 2012. We are a fully licensed and insured plumbing company with a team of certified professionals. We pride ourselves on our attention to detail, reliability, and commitment to customer satisfaction. Whether you need emergency repairs or a new installation, we are here to help.",
+  "years_in_business": 12,
+  "is_licensed": true,
+  "is_insured": true,
+  "is_verified": true,
+  "license_number": "23841",
+  "license_state": "CO",
+  "insurance_provider": "State Farm",
+  "rating": 4.8,
+  "services": [
+    "Pipe Repair and Replacement",
+    "Water Heater Installation",
+    "Drain Cleaning",
+    "Leak Detection",
+    "Faucet Repair and Installation",
+    "Toilet Repair and Replacement",
+    "Sewer Line Repair",
+    "Water Softener Installation",
+    "Commercial Plumbing",
+    "Emergency Repair"
+  ],
+  "gallery": [
+    {
+      "url": "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=500&h=500&fit=crop",
+      "alt": "Professional bathroom installation"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=500&h=500&fit=crop",
+      "alt": "Modern kitchen sink installation"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1581578731548-c64695c952952?w=500&h=500&fit=crop",
+      "alt": "Water heater service"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1585771724684-38269d6639fd?w=500&h=500&fit=crop",
+      "alt": "Pipe installation project"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=500&h=500&fit=crop",
+      "alt": "Commercial plumbing work"
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1584622674529-76b0a2b89e6e?w=500&h=500&fit=crop",
+      "alt": "Drain cleaning service"
+    }
+  ],
+  "reviews": [
+    {
+      "author": "Sarah Johnson",
+      "rating": 5,
+      "text": "John and his team were professional and punctual. They fixed our water heater issue quickly and explained everything clearly. Very satisfied with the service and the fair pricing.",
+      "date": "2024-01-15"
+    },
+    {
+      "author": "Michael Chen",
+      "rating": 5,
+      "text": "Emergency call at 11 PM and they were here within 30 minutes. Fixed the burst pipe with minimal disruption. Highly recommend for any plumbing emergency.",
+      "date": "2023-12-28"
+    },
+    {
+      "author": "Amanda Rodriguez",
+      "rating": 4,
+      "text": "Great customer service and quality work. The team was clean and respectful of our home. Would definitely call them again for future plumbing needs.",
+      "date": "2023-11-10"
+    }
+  ]
+}
