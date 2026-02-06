@@ -1,0 +1,216 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://nodarex.com/schemas/contractor-profile.v1.json",
+  "title": "NODAREX Contractor Public Profile (v1)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["version", "slug", "business", "service_area", "primary_category", "services", "trust", "contact_rules"],
+  "properties": {
+    "version": { "type": "string", "const": "1.0.0" },
+
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:[a-z0-9-]*[a-z0-9])?$",
+      "minLength": 3,
+      "maxLength": 64,
+      "description": "URL-safe contractor identifier, used to load /data/{slug}.json"
+    },
+
+    "primary_category": {
+      "type": "string",
+      "minLength": 2,
+      "maxLength": 80,
+      "description": "MVP categories like Roofing, Electrical, Plumbing, Remodeling"
+    },
+
+    "business": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["name_public", "tagline", "about", "years_in_business"],
+      "properties": {
+        "name_public": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "tagline": { "type": "string", "minLength": 2, "maxLength": 140 },
+        "about": { "type": "string", "minLength": 20, "maxLength": 2000 },
+        "years_in_business": { "type": "integer", "minimum": 0, "maximum": 100 },
+
+        "logo_url": { "type": "string", "format": "uri" },
+        "hero_image_url": { "type": "string", "format": "uri" },
+
+        "highlights": {
+          "type": "array",
+          "maxItems": 8,
+          "items": { "type": "string", "minLength": 2, "maxLength": 80 },
+          "description": "Short bullets like '24/7 Emergency', 'Licensed & Insured', 'Free Estimates'"
+        }
+      }
+    },
+
+    "service_area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["display", "geo"],
+      "properties": {
+        "display": { "type": "string", "minLength": 2, "maxLength": 120 },
+        "geo": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["type", "coordinates"],
+          "properties": {
+            "type": { "type": "string", "const": "Point" },
+            "coordinates": {
+              "type": "array",
+              "minItems": 2,
+              "maxItems": 2,
+              "items": { "type": "number" },
+              "description": "[lng, lat]"
+            }
+          }
+        },
+        "radius_miles": { "type": "integer", "minimum": 1, "maximum": 200 }
+      }
+    },
+
+    "services": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 30,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name"],
+        "properties": {
+          "name": { "type": "string", "minLength": 2, "maxLength": 80 },
+          "description": { "type": "string", "minLength": 0, "maxLength": 240 }
+        }
+      }
+    },
+
+    "photos": {
+      "type": "array",
+      "maxItems": 40,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["url"],
+        "properties": {
+          "url": { "type": "string", "format": "uri" },
+          "alt": { "type": "string", "minLength": 0, "maxLength": 120 }
+        }
+      }
+    },
+
+    "trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["nodarex_verified", "license", "insurance", "background_check"],
+      "properties": {
+        "nodarex_verified": { "type": "boolean" },
+
+        "license": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": {
+            "status": { "type": "string", "enum": ["not_provided", "pending", "verified", "expired", "failed"] },
+            "verified_on": { "type": "string", "format": "date" },
+            "public_note": { "type": "string", "minLength": 0, "maxLength": 160 }
+          }
+        },
+
+        "insurance": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": {
+            "status": { "type": "string", "enum": ["not_provided", "pending", "verified", "expired", "failed"] },
+            "verified_on": { "type": "string", "format": "date" },
+            "public_note": { "type": "string", "minLength": 0, "maxLength": 160 }
+          }
+        },
+
+        "background_check": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["status"],
+          "properties": {
+            "status": { "type": "string", "enum": ["not_started", "pending", "passed", "failed", "expired"] },
+            "completed_on": { "type": "string", "format": "date" },
+            "public_note": { "type": "string", "minLength": 0, "maxLength": 160 }
+          }
+        },
+
+        "badges": {
+          "type": "array",
+          "maxItems": 8,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["label", "status"],
+            "properties": {
+              "label": { "type": "string", "minLength": 2, "maxLength": 40 },
+              "status": { "type": "string", "enum": ["positive", "neutral", "warning"] }
+            }
+          }
+        }
+      }
+    },
+
+    "contact_rules": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["mode", "allow_call_request", "allow_text_request", "response_sla_minutes"],
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": ["in_app_only", "call_after_accept", "call_and_text_public"],
+          "description": "MVP should be in_app_only"
+        },
+        "allow_call_request": { "type": "boolean" },
+        "allow_text_request": { "type": "boolean" },
+        "response_sla_minutes": { "type": "integer", "minimum": 5, "maximum": 1440 },
+
+        "public_phone": {
+          "type": "string",
+          "pattern": "^\\+?[0-9\\s().-]{7,25}$",
+          "description": "Only used if mode = call_and_text_public"
+        },
+
+        "public_text_number": {
+          "type": "string",
+          "pattern": "^\\+?[0-9\\s().-]{7,25}$",
+          "description": "Only used if mode = call_and_text_public"
+        }
+      }
+    },
+
+    "reviews": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "summary": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "rating_avg": { "type": "number", "minimum": 0, "maximum": 5 },
+            "count": { "type": "integer", "minimum": 0, "maximum": 100000 }
+          }
+        },
+        "items": {
+          "type": "array",
+          "maxItems": 30,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["author", "rating", "date", "text"],
+            "properties": {
+              "author": { "type": "string", "minLength": 1, "maxLength": 60 },
+              "rating": { "type": "integer", "minimum": 1, "maximum": 5 },
+              "date": { "type": "string", "format": "date" },
+              "text": { "type": "string", "minLength": 10, "maxLength": 800 }
+            }
+          }
+        }
+      }
+    }
+  }
+}
