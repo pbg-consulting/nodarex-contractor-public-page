@@ -28,6 +28,21 @@ async function initializeApp() {
 // Load contractor data from JSON
 // Load contractor data based on slug
 async function loadContractorData() {
+  try {
+    const pathParts = window.location.pathname.split('/');
+    const slug = pathParts[pathParts.length - 1].replace('contractor-', '');
+
+    const response = await fetch(`/data/${slug}.json`);
+    if (!response.ok) throw new Error('Data file not found');
+
+    const contractor = await response.json();
+    renderContractorProfile(contractor);
+  } catch (error) {
+    console.error(error);
+    showErrorState();
+  }
+}
+
   const path = window.location.pathname;
   const match = path.match(/contractor-([a-z0-9-]+)/i);
 
