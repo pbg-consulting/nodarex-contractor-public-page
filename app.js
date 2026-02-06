@@ -1,5 +1,5 @@
 // Application State
-let appState = {
+const appState = {
   contractor: null,
   currentPage: 'home',
   scrollPosition: 0,
@@ -14,14 +14,10 @@ document.addEventListener('DOMContentLoaded', initializeApp);
 
 async function initializeApp() {
   try {
-    // Load contractor data
     const data = await loadContractorData();
     appState.contractor = data;
-    
-    // Render the page
+
     renderPage();
-    
-    // Attach event listeners
     attachEventListeners();
   } catch (error) {
     console.error('Failed to initialize app:', error);
@@ -31,10 +27,8 @@ async function initializeApp() {
 
 // Load contractor data from JSON
 async function loadContractorData() {
-  const response = await fetch('./contractor.sample.json');
-  if (!response.ok) {
-    throw new Error('Failed to load contractor data');
-  }
+  const response = await fetch('./contractor.sample.json', { cache: 'no-store' });
+  if (!response.ok) throw new Error('Failed to load contractor data');
   return response.json();
 }
 
@@ -42,7 +36,9 @@ async function loadContractorData() {
 function renderPage() {
   const appRoot = document.getElementById('app-root');
   const contractor = appState.contractor;
-  
+
+  if (!appRoot) return;
+
   if (!contractor) {
     appRoot.innerHTML = '<div class="empty-state">No contractor data available</div>';
     return;
@@ -50,44 +46,34 @@ function renderPage() {
 
   let html = '';
 
-  // Hero Section
   html += renderHeroSection(contractor);
 
-  // Trust Indicators
   if (hasTrustData(contractor)) {
     html += renderTrustSection(contractor);
   }
 
-  // About Section
   if (contractor.about) {
     html += renderAboutSection(contractor);
   }
 
-  // Services Section
   if (contractor.services && contractor.services.length > 0) {
     html += renderServicesSection(contractor);
   }
 
-  // Gallery Section
   if (contractor.gallery && contractor.gallery.length > 0) {
     html += renderGallerySection(contractor);
     appState.gallery = contractor.gallery;
   }
 
-  // Reviews Section
   if (contractor.reviews && contractor.reviews.length > 0) {
     html += renderReviewsSection(contractor);
   }
 
-  // Credentials Section
   if (hasCredentialsData(contractor)) {
     html += renderCredentialsSection(contractor);
   }
 
-  // Standards Section
   html += renderStandardsSection();
-
-  // Footer
   html += renderFooter();
 
   appRoot.innerHTML = html;
@@ -100,7 +86,7 @@ function renderHeroSection(contractor) {
   const serviceArea = sanitize(contractor.service_area || '');
   const description = sanitize(contractor.description || '');
 
-  let html = `
+  return `
     <section class="hero">
       <div class="container">
         <div class="hero-content">
@@ -129,8 +115,6 @@ function renderHeroSection(contractor) {
       </div>
     </section>
   `;
-
-  return html;
 }
 
 // Trust Indicators Section
@@ -138,35 +122,16 @@ function renderTrustSection(contractor) {
   const trustItems = [];
 
   if (contractor.years_in_business) {
-    trustItems.push({
-      label: 'Years in Business',
-      value: contractor.years_in_business,
-      badge: null
-    });
+    trustItems.push({ label: 'Years in Business', value: contractor.years_in_business, badge: null });
   }
-
   if (contractor.is_licensed) {
-    trustItems.push({
-      label: 'Licensed',
-      value: 'Yes',
-      badge: 'verified'
-    });
+    trustItems.push({ label: 'Licensed', value: 'Yes', badge: 'verified' });
   }
-
   if (contractor.is_insured) {
-    trustItems.push({
-      label: 'Insured',
-      value: 'Yes',
-      badge: 'verified'
-    });
+    trustItems.push({ label: 'Insured', value: 'Yes', badge: 'verified' });
   }
-
   if (contractor.is_verified) {
-    trustItems.push({
-      label: 'Verified by NODAREX',
-      value: 'Yes',
-      badge: 'verified'
-    });
+    trustItems.push({ label: 'Verified by NODAREX', value: 'Yes', badge: 'verified' });
   }
 
   if (trustItems.length === 0) return '';
@@ -176,12 +141,12 @@ function renderTrustSection(contractor) {
   trustItems.forEach(item => {
     html += `
       <div class="trust-item">
-        <span class="trust-label">${item.label}</span>
-        <div class="trust-value">${item.value}</div>
+        <span class="trust-label">${sanitize(item.label)}</span>
+        <div class="trust-value">${sanitize(String(item.value))}</div>
         ${item.badge === 'verified' ? `
           <span class="trust-badge">
             <svg fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-2.77 3.066 3.066 0 00-3.58 3.03A3.066 3.066 0 006.267 3.455zm9.8 8.334c.652-1.65.193-3.978-1.769-5.231-1.667.02-3.29.181-4.486.52a2.585 2.585 0 00-1.287 4.04 2.997 2.997 0 00-.725 1.491c-.108.662-.073 1.147.04 1.case.16.537.551 1.076 1.157 1.428.086.05.18.084.277.114.9.406 1.93.894 2.884 1.694.957.8 1.882 1.904 2.26 3.19.378 1.286.038 2.644-.932 3.437-.971.794-2.354.693-3.476-.212-1.122-.905-2.135-2.119-3.042-3.67-.571 1.013-.823 2.237-.823 3.517 0 .8.123 1.582.357 2.322C4.248 19.397 2.261 19.25 1 18.063c-.755-.675-1.009-1.677-.659-2.506.35-.828 1.012-1.374 1.91-1.633.15-.041.299-.084.447-.128 1.396-.41 2.763-.91 4.022-1.536.645-.32 1.237-.757 1.76-1.287-.524-.744-.905-1.772-.905-2.987 0-.839.112-1.633.33-2.365z" clip-rule="evenodd"></path>
+              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.707a1 1 0 00-1.414-1.414L9 10.172 7.707 8.879a1 1 0 10-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"></path>
             </svg>
             Verified
           </span>
@@ -228,7 +193,7 @@ function renderGallerySection(contractor) {
   images.forEach((image, index) => {
     html += `
       <div class="gallery-item" data-index="${index}">
-        <img src="${image.url}" alt="${sanitize(image.alt || 'Project image')}" loading="lazy">
+        <img src="${sanitize(image.url)}" alt="${sanitize(image.alt || 'Project image')}" loading="lazy">
         <div class="gallery-overlay">
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0zM10 7v6m3-3H7"></path>
@@ -256,7 +221,7 @@ function renderReviewsSection(contractor) {
         <div class="reviews-header">
           <div class="reviews-rating">
             <div class="rating-score">
-              <span class="rating-value">${rating.toFixed(1)}</span>
+              <span class="rating-value">${Number(rating).toFixed(1)}</span>
             </div>
             <div class="rating-stars">
               ${renderStars(Math.round(rating))}
@@ -268,17 +233,15 @@ function renderReviewsSection(contractor) {
   `;
 
   reviews.slice(0, 3).forEach(review => {
-    const reviewDate = review.date ? new Date(review.date).toLocaleDateString('en-US', { 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    }) : '';
+    const reviewDate = review.date
+      ? new Date(review.date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
+      : '';
 
     html += `
       <div class="review-card">
         <div class="review-header">
           <span class="review-author">${sanitize(review.author || 'Anonymous')}</span>
-          ${reviewDate ? `<span class="review-date">${reviewDate}</span>` : ''}
+          ${reviewDate ? `<span class="review-date">${sanitize(reviewDate)}</span>` : ''}
         </div>
         <div class="review-stars">
           ${renderStars(review.rating || 5)}
@@ -304,10 +267,7 @@ function renderCredentialsSection(contractor) {
   }
 
   if (contractor.insurance_provider) {
-    credentials.push({
-      label: 'Insurance Provider',
-      value: contractor.insurance_provider
-    });
+    credentials.push({ label: 'Insurance Provider', value: contractor.insurance_provider });
   }
 
   if (credentials.length === 0) return '';
@@ -317,7 +277,7 @@ function renderCredentialsSection(contractor) {
   credentials.forEach(cred => {
     html += `
       <div class="credential-item">
-        <div class="credential-label">${cred.label}</div>
+        <div class="credential-label">${sanitize(cred.label)}</div>
         <div class="credential-value">${sanitize(cred.value)}</div>
       </div>
     `;
@@ -369,30 +329,23 @@ function renderStars(count) {
 }
 
 function hasTrustData(contractor) {
-  return !!(
-    contractor.is_licensed || 
-    contractor.is_insured || 
-    contractor.is_verified || 
-    contractor.years_in_business
-  );
+  return !!(contractor.is_licensed || contractor.is_insured || contractor.is_verified || contractor.years_in_business);
 }
 
 function hasCredentialsData(contractor) {
-  return !!(
-    (contractor.license_number && contractor.license_state) ||
-    contractor.insurance_provider
-  );
+  return !!((contractor.license_number && contractor.license_state) || contractor.insurance_provider);
 }
 
 function sanitize(text) {
-  if (!text) return '';
+  if (text === null || text === undefined) return '';
   const div = document.createElement('div');
-  div.textContent = text;
+  div.textContent = String(text);
   return div.innerHTML;
 }
 
 function renderErrorState() {
   const appRoot = document.getElementById('app-root');
+  if (!appRoot) return;
   appRoot.innerHTML = `
     <div class="container" style="padding-top: 3rem;">
       <div class="empty-state">
@@ -407,84 +360,85 @@ function renderErrorState() {
 function attachEventListeners() {
   // Request Service Modal
   const requestBtn = document.querySelector('.btn-request-service');
-  const modal = document.getElementById('request-modal');
-  const modalClose = document.querySelector('.modal-close');
-  const modalOverlay = modal.querySelector('.modal-overlay');
-  const requestForm = document.getElementById('request-form');
+  const requestModal = document.getElementById('request-modal');
+  const requestClose = requestModal?.querySelector('.modal-close');
+  const requestOverlay = requestModal?.querySelector('.modal-overlay');
+  const requestFormEl = document.getElementById('request-form');
 
-  requestBtn?.addEventListener('click', openModal);
-  modalClose?.addEventListener('click', closeModal);
-  modalOverlay?.addEventListener('click', closeModal);
-  requestForm?.addEventListener('submit', handleFormSubmit);
+  requestBtn?.addEventListener('click', openRequestModal);
+  requestClose?.addEventListener('click', closeRequestModal);
+  requestOverlay?.addEventListener('click', closeRequestModal);
+  requestFormEl?.addEventListener('submit', handleFormSubmit);
 
   // Gallery Modal
   const galleryModal = document.getElementById('gallery-modal');
-  const galleryClose = document.querySelector('.gallery-close');
+  const galleryClose = galleryModal?.querySelector('.gallery-close');
   const galleryOverlay = galleryModal?.querySelector('.modal-overlay');
   const galleryItems = document.querySelectorAll('.gallery-item');
-  const galleryPrev = document.querySelector('.gallery-prev');
-  const galleryNext = document.querySelector('.gallery-next');
+  const galleryPrev = galleryModal?.querySelector('.gallery-prev');
+  const galleryNext = galleryModal?.querySelector('.gallery-next');
 
-  galleryItems.forEach(item => {
-    item.addEventListener('click', openGallery);
-  });
+  galleryItems.forEach(item => item.addEventListener('click', openGallery));
 
   galleryClose?.addEventListener('click', closeGallery);
   galleryOverlay?.addEventListener('click', closeGallery);
   galleryPrev?.addEventListener('click', previousImage);
   galleryNext?.addEventListener('click', nextImage);
 
-  // Keyboard Navigation
   document.addEventListener('keydown', handleKeyPress);
-
-  // Close modals on escape
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape') {
-      if (appState.isModalOpen) closeModal();
-      if (appState.isGalleryOpen) closeGallery();
-    }
-  });
 }
 
-// Modal Functions
-function openModal() {
+// Request Modal Functions
+function openRequestModal() {
   const modal = document.getElementById('request-modal');
-  appState.scrollPosition = document.getElementById('app-root').scrollTop;
+  if (!modal) return;
+
+  appState.scrollPosition = document.getElementById('app-root')?.scrollTop || 0;
   appState.isModalOpen = true;
-  
+
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
-  
-document.getElementById('app-root').style.overflow = isOpen ? 'hidden' : '';
 
-const requestForm = document.querySelector('.request-form');
-if (requestForm) {
-  requestForm.style.display = isOpen ? 'flex' : 'none';
+  const root = document.getElementById('app-root');
+  if (root) root.style.overflow = 'hidden';
+
+  const requestFormWrap = modal.querySelector('.request-form');
+  if (requestFormWrap) requestFormWrap.style.display = 'flex';
+
+  const success = document.getElementById('form-success');
+  if (success) success.style.display = 'none';
 }
 
-function closeModal() {
+function closeRequestModal() {
   const modal = document.getElementById('request-modal');
+  if (!modal) return;
+
   appState.isModalOpen = false;
-  
+
   modal.classList.remove('active');
   modal.setAttribute('aria-hidden', 'true');
-  
-  document.getElementById('app-root').style.overflow = '';
-  
-  // Reset form
-  document.getElementById('request-form').reset();
-  document.querySelector('.request-form')?.style.display = 'flex';
-  document.getElementById('form-success').style.display = 'none';
-  
-  // Restore scroll position
+
+  const root = document.getElementById('app-root');
+  if (root) root.style.overflow = '';
+
+  const form = document.getElementById('request-form');
+  form?.reset();
+
+  const requestFormWrap = modal.querySelector('.request-form');
+  if (requestFormWrap) requestFormWrap.style.display = 'flex';
+
+  const success = document.getElementById('form-success');
+  if (success) success.style.display = 'none';
+
   setTimeout(() => {
-    document.getElementById('app-root').scrollTop = appState.scrollPosition;
+    const r = document.getElementById('app-root');
+    if (r) r.scrollTop = appState.scrollPosition;
   }, 0);
 }
 
 function handleFormSubmit(e) {
   e.preventDefault();
-  
+
   const formData = new FormData(e.target);
   const payload = {
     timestamp: new Date().toISOString(),
@@ -498,42 +452,51 @@ function handleFormSubmit(e) {
   };
 
   console.log('Service Request Submitted:', payload);
-  
-  // Show success message
-  document.querySelector('.request-form').style.display = 'none';
-  document.getElementById('form-success').style.display = 'flex';
+
+  const modal = document.getElementById('request-modal');
+  const requestFormWrap = modal?.querySelector('.request-form');
+  if (requestFormWrap) requestFormWrap.style.display = 'none';
+
+  const success = document.getElementById('form-success');
+  if (success) success.style.display = 'flex';
 }
 
 // Gallery Functions
 function openGallery(e) {
   const item = e.currentTarget;
   const index = parseInt(item.dataset.index, 10);
-  
-  appState.currentGalleryIndex = index;
-  appState.scrollPosition = document.getElementById('app-root').scrollTop;
+
+  appState.currentGalleryIndex = Number.isFinite(index) ? index : 0;
+  appState.scrollPosition = document.getElementById('app-root')?.scrollTop || 0;
   appState.isGalleryOpen = true;
-  
+
   const modal = document.getElementById('gallery-modal');
+  if (!modal) return;
+
   modal.classList.add('active');
   modal.setAttribute('aria-hidden', 'false');
-  
-  document.getElementById('app-root').style.overflow = 'hidden';
-  
+
+  const root = document.getElementById('app-root');
+  if (root) root.style.overflow = 'hidden';
+
   updateGalleryImage();
 }
 
 function closeGallery() {
   const modal = document.getElementById('gallery-modal');
+  if (!modal) return;
+
   appState.isGalleryOpen = false;
-  
+
   modal.classList.remove('active');
   modal.setAttribute('aria-hidden', 'true');
-  
-  document.getElementById('app-root').style.overflow = '';
-  
-  // Restore scroll position
+
+  const root = document.getElementById('app-root');
+  if (root) root.style.overflow = '';
+
   setTimeout(() => {
-    document.getElementById('app-root').scrollTop = appState.scrollPosition;
+    const r = document.getElementById('app-root');
+    if (r) r.scrollTop = appState.scrollPosition;
   }, 0);
 }
 
@@ -541,30 +504,38 @@ function updateGalleryImage() {
   const image = appState.gallery[appState.currentGalleryIndex];
   const galleryImage = document.getElementById('gallery-image');
   const counter = document.getElementById('gallery-counter');
-  
+
   if (galleryImage && image) {
     galleryImage.src = image.url;
     galleryImage.alt = image.alt || 'Project image';
+  }
+
+  if (counter) {
     counter.textContent = `${appState.currentGalleryIndex + 1} / ${appState.gallery.length}`;
   }
 }
 
 function nextImage() {
+  if (!appState.gallery.length) return;
   appState.currentGalleryIndex = (appState.currentGalleryIndex + 1) % appState.gallery.length;
   updateGalleryImage();
 }
 
 function previousImage() {
+  if (!appState.gallery.length) return;
   appState.currentGalleryIndex = (appState.currentGalleryIndex - 1 + appState.gallery.length) % appState.gallery.length;
   updateGalleryImage();
 }
 
 function handleKeyPress(e) {
-  if (!appState.isGalleryOpen) return;
-  
-  if (e.key === 'ArrowRight') {
-    nextImage();
-  } else if (e.key === 'ArrowLeft') {
-    previousImage();
+  if (e.key === 'Escape') {
+    if (appState.isModalOpen) closeRequestModal();
+    if (appState.isGalleryOpen) closeGallery();
+    return;
   }
+
+  if (!appState.isGalleryOpen) return;
+
+  if (e.key === 'ArrowRight') nextImage();
+  if (e.key === 'ArrowLeft') previousImage();
 }
