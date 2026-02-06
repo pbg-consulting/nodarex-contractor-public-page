@@ -26,10 +26,38 @@ async function initializeApp() {
 }
 
 // Load contractor data from JSON
+// Load contractor data based on slug
 async function loadContractorData() {
-  const response = await fetch('./contractor.sample.json', { cache: 'no-store' });
-  if (!response.ok) throw new Error('Failed to load contractor data');
+  const slug = getContractorSlug();
+  const url = slug ? `./data/${slug}.json` : './contractor.sample.json';
+
+  const response = await fetch(url, { cache: 'no-store' });
+
+  if (!response.ok) {
+    throw new Error(`Failed to load contractor data for slug: ${slug || 'sample'}`);
+  }
+
   return response.json();
+}
+
+function getContractorSlug() {
+  const params = new URLSearchParams(window.location.search);
+  const fromQuery = params.get('contractor') || params.get('slug');
+  if (fromQuery) return sanitizeSlug(fromQuery);
+
+  const host = window.location.hostname || '';
+  const parts = host.split('.');
+  const subdomain = parts.length >= 3 ? parts[0] : '';
+  if (subdomain && subdomain !== 'www') return sanitizeSlug(subdomain);
+
+  return '';
+}
+
+function sanitizeSlug(value) {
+  return String(value)
+    .toLowerCase()
+    .trim()
+    .replace(/[^a-z0-9]/g, '');
 }
 
 // Main render function
