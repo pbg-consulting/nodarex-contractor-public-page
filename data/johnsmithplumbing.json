@@ -1,0 +1,16 @@
+{
+  "slug": "johnsmithplumbing",
+  "business_name": "John Smith Plumbing",
+  "category": "Plumbing",
+  "location": "Denver Metro Area, Colorado",
+  "description": "Professional plumbing services for residential and commercial properties.",
+  "years_in_business": 12,
+  "licensed": true,
+  "insured": true,
+  "verified": true,
+  "services": [
+    "Pipe Repair",
+    "Drain Cleaning",
+    "Water Heater Installation"
+  ]
+}
